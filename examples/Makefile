@@ -1,4 +1,4 @@
-POBJS = test.o
+SF2FLOAT_POBJS = sf2float.o
 
 # CFLAGS = -I ../include -D_DEBUG -g
 # on strange 64 bit platforms must define CPLONG64
@@ -11,14 +11,14 @@ CC=gcc
 .c.o:	$(CC) -c $(CFLAGS) $< -o $@ 
 
 .PHONY:	clean veryclean
-all:	audio_test
+all:	sf2float
 
 clean:
-	-rm -f audio_test; 
+	-rm -f sf2float; 
 
 veryclean:
-	-rm -f $(POBJS) 
-	rm -f audio_test; 
+	-rm -f $(SF2FLOAT_POBJS) 
+	rm -f sf2float; 
 
-audio_test:		$(POBJS)
-	$(CC) -o audio_test $(POBJS) $(LIBS) $(LDFLAGS);
+sf2float:		$(SF2FLOAT_POBJS)
+	$(CC) -o sf2float $(SF2FLOAT_POBJS) $(LIBS) $(LDFLAGS);
