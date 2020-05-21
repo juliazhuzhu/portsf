@@ -1,25 +1,41 @@
-
 #include <stdio.h>
-#include <math.h>
 #include "portsf.h"
 
+enum {ARG_PROGNAME , ARG_INFILE , ARG_OUTFILE , ARG_PANPOS , ARG_NARGS } ;
+
+typedef struct panpos {
+        double left;
+        double right;
+} PANPOS;
+
+PANPOS simplepan(double position){
+
+    PANPOS pos;
+
+    position *= position;
+    pos.left = position - 0.5;
+    pos.right = position + 0.5;
+
+    return pos;
+}
+
 int main(int argc, char* argv[]){
-	
-	
-	PSF_PROPS props;
+
+    PSF_PROPS props;
 	long framesread = 0;
 	int ifd = - 1 , ofd = - 1 ; 
 	int error = 0 ; 
 	psf_format outformat = PSF_FMT_UNKNOWN ; 
 	PSF_CHPEAK* peaks = NULL ; 
-	float* in_frame = NULL ;
-	float* out_frame = NULL;
+	float* frame = NULL ;
 
-	if (argc < 4){
+    
+	if (argc < ARG_NARGS){
 		printf("invalid parameters \n");
 		return -1;
 	}
-	psf_init();
+
+    psf_init();
 	ifd = psf_sndOpen(argv[1],&props,0);
 	if (ifd < 0){
 		printf("failed to open the file \n");
@@ -35,13 +51,8 @@ int main(int argc, char* argv[]){
 	if (props.samptype == PSF_SAMP_IEEE_FLOAT ) {
 		printf ( " Info : infile is already in floats format . \n " ) ; 
 	}
-
-	float ampfac = atoi(argv[3]);
-	ampfac = ampfac/100;
-
-	//props.chans = 1;
+	
 	//float ampfac = ( float ) pow ( 10.0 , dbval /20.0 ) ;
-	printf("ampfac %s \t%f \n", argv[3],ampfac);
 	//props.samptype = PSF_SAMP_IEEE_FLOAT ;
 	
 
@@ -53,38 +64,35 @@ int main(int argc, char* argv[]){
 	}
 	props.format = outformat;
 	int frames = 1024;
-	in_frame = (float*) malloc(props.chans*sizeof(float)* frames) ;
-	props.chans = 1;
-	
-	out_frame = (float*) malloc(props.chans*sizeof(float)* frames) ;
-
+	frame = (float*) malloc(props.chans*sizeof(float)* frames) ;
+	props.chans = 2;
 	ofd = psf_sndCreate ( argv[2], &props , 0, 0 , PSF_CREATE_RDWR ) ;
-	
+	float* output_frame = (float*) malloc(props.chans*sizeof(float)* frames) ;
 	peaks = ( PSF_CHPEAK* ) malloc(props.chans*sizeof (PSF_CHPEAK)) ;
-	framesread = psf_sndReadFloatFrames(ifd, in_frame,frames);
+	framesread = psf_sndReadFloatFrames(ifd, frame,frames);
 	printf("frameread %d \n",framesread);
 	long totalread = 0;
-	int i =0;
+	int i =0, output_i = 0;
+    PANPOS thispos = simplepan(1);
 	while (framesread > 0){
 		totalread++;
-
-		//for (i = 0; i < props.chans; i++){
-			int output = 0;
-			for (int j = 0; j < framesread; j++){
-				
-				//input is a stereo type, output is mono
-				//hence out frame should read a even/odd frame.
-				out_frame[output++] = in_frame[j*2];//*ampfac;
-				
-			}
-			//printf("output %d \n", output);
-		//}
-		if (psf_sndWriteFloatFrames(ofd, out_frame, framesread) == -1){
+		//int output_i = 0
+        for (int j = 0; j < framesread; j++){
+            //printf("before %d \n", fabs(frame[i*framesread+j]));
+            output_frame[output_i++] = (float)frame[j]*thispos.left;
+            output_frame[output_i++] = (float)frame[j]*thispos.right;
+            //printf("after %f \n", fabs(frame[i*framesread+j]));
+			
+        }
+		//stearo, one frame has two samples
+		//freadread from mono should be used here
+		if (psf_sndWriteFloatFrames(ofd, output_frame, framesread) == -1){
 			printf("error in writing. \n");
 			error++;
 			break;
 		}
-		framesread = psf_sndReadFloatFrames(ifd, in_frame,frames);
+		output_i = 0;
+		framesread = psf_sndReadFloatFrames(ifd, frame,frames);
 	}
 	printf("after loop frameread %d \n",framesread);
 	if (framesread < 0){
@@ -104,11 +112,8 @@ int main(int argc, char* argv[]){
 		}
 	}
 EXIT:
-	if (in_frame){
-		free(in_frame);
-	}
-	if (out_frame){
-		free(out_frame);
+	if (frame){
+		free(frame);
 	}
 	if (ifd >=0)
 		psf_sndClose (ifd) ;
@@ -117,4 +122,9 @@ EXIT:
 	psf_finish();
 	
 	return error;
+
+
+    return 1;
+
 }
+

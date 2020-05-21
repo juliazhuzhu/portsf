@@ -3,7 +3,7 @@
 #include "portsf.h"
 
 int main(int argc, char* argv[]){
-	psf_init();
+	
 	
 	PSF_PROPS props;
 	long framesread = 0;
@@ -18,6 +18,7 @@ int main(int argc, char* argv[]){
 		return -1;
 	}
 
+	psf_init();
 	ifd = psf_sndOpen(argv[1],&props,0);
 	if (ifd < 0){
 		printf("failed to open the file \n");
@@ -84,6 +85,7 @@ EXIT:
 		psf_sndClose (ifd) ;
 	if (ofd >=0)
 		psf_sndClose(ofd);
+		
 	psf_finish();
 	
 	return error;
