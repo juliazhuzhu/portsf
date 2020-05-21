@@ -3,5 +3,7 @@
 ./lib/*
 lib
 *.a
+*.mp3
+*.wav
 .DS_Store
 
