@@ -42,7 +42,7 @@ int main(int argc, char* argv[]){
 	//props.chans = 1;
 	//float ampfac = ( float ) pow ( 10.0 , dbval /20.0 ) ;
 	printf("ampfac %s \t%f \n", argv[3],ampfac);
-	//props.samptype = PSF_SAMP_IEEE_FLOAT ;
+	props.samptype = PSF_SAMP_IEEE_FLOAT ;
 	
 
 	outformat = psf_getFormatExt (argv[2 ]) ;

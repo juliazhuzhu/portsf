@@ -53,7 +53,7 @@ int main(int argc, char* argv[]){
 	}
 	
 	//float ampfac = ( float ) pow ( 10.0 , dbval /20.0 ) ;
-	//props.samptype = PSF_SAMP_IEEE_FLOAT ;
+	props.samptype = PSF_SAMP_IEEE_FLOAT ;
 	
 
 	outformat = psf_getFormatExt (argv[2 ]) ;
