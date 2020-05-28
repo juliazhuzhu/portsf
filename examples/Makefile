@@ -3,6 +3,7 @@ SFGAIN_POBJS = sfgain.o
 SFPAN_POBJS = sfpan.o
 ENVX_POBJS = envx.o
 SFENV_POBJS = sfenv.o breakpoint.o
+SIGGEN_POBJS = siggen.o wave.o
 
 # CFLAGS = -I ../include -D_DEBUG -g
 # on strange 64 bit platforms must define CPLONG64
@@ -15,7 +16,7 @@ CC=gcc
 .c.o:	$(CC) -c $(CFLAGS) $< -o $@ 
 
 .PHONY:	clean veryclean
-all:	sf2float sfgain sfpan envx sfenv
+all:	sf2float sfgain sfpan envx sfenv siggen
 
 clean:
 	-rm -f sf2float; 
@@ -23,6 +24,7 @@ clean:
 	rm -f sfpan;
 	rm -f envx;
 	rm -f sfenv;
+	rm -f siggen;
 
 veryclean:
 	-rm -f $(SF2FLOAT_POBJS) 
@@ -31,6 +33,7 @@ veryclean:
 	rm -f sfpan;
 	rm -f envx;
 	rm -f sfenv;
+	rm -f siggen;
 
 sf2float:		$(SF2FLOAT_POBJS)
 	$(CC) -o sf2float $(SF2FLOAT_POBJS) $(LIBS) $(LDFLAGS);
@@ -47,4 +50,7 @@ envx: $(ENVX_POBJS)
 
 sfenv: $(SFENV_POBJS)
 	$(CC) -o sfenv $(SFENV_POBJS) $(LIBS) $(LDFLAGS);
+
+siggen: $(SIGGEN_POBJS)
+	$(CC) -o siggen $(SIGGEN_POBJS) $(LIBS) $(LDFLAGS);
 
