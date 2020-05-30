@@ -33,3 +33,25 @@ double sinetick(OSCIL* p_osc, double freq){
     
     return val;
 }
+
+
+double sqtick(OSCIL* p_osc, double freq){
+
+    double val;
+    if (p_osc->curfreq != freq){
+        p_osc->curfreq = freq;
+        p_osc->incr = p_osc->twopiovrsr*freq;
+    }
+    if (p_osc->curphase <= M_PI)
+        val = 1.0;
+    else
+        val = -1;
+    p_osc->curphase += p_osc->incr;
+    if (p_osc->curphase >= TWOPI)
+        p_osc->curphase -= TWOPI;
+    if (p_osc->curphase < 0.0)
+        p_osc->curphase += TWOPI;
+    
+    return val;
+
+}

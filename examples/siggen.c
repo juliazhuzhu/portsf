@@ -14,8 +14,10 @@ int main(int argc, char* argv[]){
     outframes = ( unsigned long )(44100*dur + 0.5);
     nbufs = outframes/nframes;
     int i = 0, j = 0;
-    double amp = 1.0;
+    double amp = 0.5;
     
+    tickfunc tick;
+    tick = sqtick;
     remainder = outframes - nbufs * nframes;
     if ( remainder > 0 ) 
         nbufs++ ;
@@ -32,13 +34,14 @@ int main(int argc, char* argv[]){
     props.samptype = PSF_SAMP_16;
     props.samptype = PSF_SAMP_IEEE_FLOAT;
     props.format = PSF_STDWAVE;
+    int freq = 10;
     ofd = psf_sndCreate(argv[ARG_OUTFILE], &props , 0, 0 ,PSF_CREATE_RDWR);
 
     for (i=0; i < nbufs; i++){
         if (i == nbufs -1)
             nframes = remainder>0?remainder:nframes;
         for (j=0; j < nframes; j++){
-            outframe[j] = (float)(amp*sinetick(p_osc, 10));
+            outframe[j] = (float)(amp*tick(p_osc, freq));
          //   printf(" %f\t", outframe[j]);
         }
 //        //printf("\n");
