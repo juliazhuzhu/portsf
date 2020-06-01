@@ -27,7 +27,7 @@ int main(int argc, char* argv[]){
     printf("%lu %lu %lu \n", outframes,remainder,nbufs);
 
     psf_init();
-    OSCIL* p_osc = oscil();
+    OSCIL* p_osc = new_oscil(0.0);
     oscil_init(p_osc,44100);
     props.srate = 44100;
     props.chans = 1;

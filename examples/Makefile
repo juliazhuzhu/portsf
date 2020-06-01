@@ -7,11 +7,11 @@ SIGGEN_POBJS = siggen.o wave.o
 
 # CFLAGS = -I ../include -D_DEBUG -g
 # on strange 64 bit platforms must define CPLONG64
-CFLAGS = -Dunix -O2 -I ../include
+CFLAGS = -Dunix -O2 -I ../include -std=c++11
 LDFLAGS = -L../lib
 LIBS = -lportsf
 
-CC=gcc
+CC=g++
 
 .c.o:	$(CC) -c $(CFLAGS) $< -o $@ 
 

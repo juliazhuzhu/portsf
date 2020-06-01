@@ -4,7 +4,7 @@
 
 void oscil_init(OSCIL* osc, unsigned long srate){
     osc->twopiovrsr = TWOPI / (double)srate;
-    osc->curfreq = 0.0;
+   // osc->curfreq = 0.0;
     osc->curphase = 0.0;
     osc->incr = 0.0;
 }
@@ -13,7 +13,13 @@ OSCIL* oscil(void){
 
     OSCIL* osc = (OSCIL*) malloc(sizeof(OSCIL));
    // assert(osc != NULL);
+    osc->curfreq = 0.0;
     return osc;
+}
+
+OSCIL* new_oscil(double freq){
+    OSCIL* osc = (OSCIL*) malloc(sizeof(OSCIL));
+    osc->curfreq = freq;
 }
 
 double sinetick(OSCIL* p_osc, double freq){

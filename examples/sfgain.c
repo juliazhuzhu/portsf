@@ -1,6 +1,7 @@
 
 #include <stdio.h>
 #include <math.h>
+#include <cstdlib>
 #include "portsf.h"
 
 int main(int argc, char* argv[]){
@@ -35,10 +36,8 @@ int main(int argc, char* argv[]){
 	if (props.samptype == PSF_SAMP_IEEE_FLOAT ) {
 		printf ( " Info : infile is already in floats format . \n " ) ; 
 	}
-
-	float ampfac = atoi(argv[3]);
-	ampfac = ampfac/100;
-
+	char* end;
+	double ampfac = strtod(argv[3],&end);
 	//props.chans = 1;
 	//float ampfac = ( float ) pow ( 10.0 , dbval /20.0 ) ;
 	printf("ampfac %s \t%f \n", argv[3],ampfac);
@@ -49,7 +48,8 @@ int main(int argc, char* argv[]){
 	if (PSF_FMT_UNKNOWN == outformat){
 		error++;
 		printf("invalid output format \n");
-		goto EXIT;
+		//goto EXIT;
+		return -1;
 	}
 	props.format = outformat;
 	int frames = 1024;
