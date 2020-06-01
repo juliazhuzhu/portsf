@@ -66,3 +66,43 @@ BRKSTREAM* bps_newstream(FILE* fp, unsigned long srate, unsigned long *size){
         *size = stream->npoints;
     return stream;
 }
+
+void bps_freepoints(BRKSTREAM* stream){
+
+    if (stream && stream->points){
+        free(stream->points);
+        stream->points = NULL;
+    }
+}
+
+
+double bps_tick(BRKSTREAM* stream){
+    double thisval, frac;
+
+    if (stream->more_points == 0){
+        return stream->rightpoint.value;
+    }
+
+    if (stream->width == 0.0)
+        thisval = stream->rightpoint.value;
+    else{
+        frac = (stream->curpos- stream->leftpoint.value)/stream->width;
+        thisval = stream->leftpoint.value + stream->height*frac;
+    }
+    
+    stream->curpos = stream->curpos + stream->incr;
+    if (stream->curpos > stream->rightpoint.time){
+        stream->ileft++;
+        stream->iright++;
+        if (stream->iright < stream->npoints){
+            stream->leftpoint = stream->points[stream->ileft];
+            stream->rightpoint = stream->points[stream->iright];
+            stream->width = stream->rightpoint.time - stream->rightpoint.time;
+            stream->height = stream->rightpoint.value - stream->rightpoint.value;
+        }
+    }else
+    {
+            stream->more_points = 0;
+    }
+    return thisval;    
+}

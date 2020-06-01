@@ -21,3 +21,7 @@ typedef struct breakpoint_stream {
 BRKSTREAM* bps_newstream(FILE* fp, unsigned long srate, unsigned long *size);
 
 BREAKPOINT* get_breakpoints(FILE* fp ,unsigned long* size);
+
+void bps_freepoints(BRKSTREAM* stream);
+
+double bps_tick(BRKSTREAM* stream);
