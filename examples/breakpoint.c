@@ -53,7 +53,7 @@ BRKSTREAM* bps_newstream(FILE* fp, unsigned long srate, unsigned long *size){
     stream->points = points;
     stream->npoints = npoints;
     stream->curpos = 0.0;
-    stream->ileft = 0;
+    stream->ileft = 0; 
     stream->iright = 1;
     stream->incr = 1.0/srate;
     stream->leftpoint = stream->points[stream->ileft];
@@ -74,7 +74,6 @@ void bps_freepoints(BRKSTREAM* stream){
         stream->points = NULL;
     }
 }
-
 
 double bps_tick(BRKSTREAM* stream){
     double thisval, frac;

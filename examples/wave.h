@@ -12,7 +12,7 @@ typedef struct t_oscil{
 
 typedef double (*tickfunc)(OSCIL* osc, double);
 void oscil_init(OSCIL* osc, unsigned long srate);
-OSCIL* new_oscil(double freq);
+OSCIL* new_oscil(double freq,unsigned long srate);
 //OSCIL* oscil(void);
 
 double sinetick(OSCIL* p_osc, double freq);
